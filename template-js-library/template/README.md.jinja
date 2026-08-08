@@ -1,0 +1,39 @@
+# {{ project_name }}
+
+{{ package_description }}
+
+## Install
+
+```sh
+npm install {{ package_name }}
+```
+
+## Use
+
+```js
+import { greet } from '{{ package_name }}'
+
+console.log(greet('World'))
+```
+
+## Development
+
+```sh
+npm install
+npm run dev
+npm test
+npm run build
+```
+
+Library source is in `src/lib`; the Astro documentation site is in `src/pages`.
+The built documentation is written to `deploy/public`.
+
+## Release
+
+```sh
+npm run release:dry-run
+npm run release
+```
+
+Before publishing, ensure npm authentication and `RELEASE_IT_GITHUB_TOKEN` are
+configured.

@@ -1,0 +1,8 @@
+import { greet } from './index'
+
+// Side-effect entrypoint. Replace this with browser initialization if needed.
+if (typeof window !== 'undefined') {
+	window.dispatchEvent(new CustomEvent('{{ package_name.split('/')[-1] }}:ready', { detail: { greet } }))
+}
+
+export { greet }

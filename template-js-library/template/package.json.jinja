@@ -1,0 +1,88 @@
+{
+	"name": "{{ package_name }}",
+	"version": "0.1.0",
+	"description": "{{ package_description }}",
+	"type": "module",
+	"main": "./dist/{{ package_name.split('/')[-1] }}.cjs",
+	"module": "./dist/{{ package_name.split('/')[-1] }}.mjs",
+{% if include_auto_entrypoint %}
+	"browser": "./dist/{{ package_name.split('/')[-1] }}-auto.min.js",
+	"unpkg": "./dist/{{ package_name.split('/')[-1] }}-auto.min.js",
+	"jsdelivr": "./dist/{{ package_name.split('/')[-1] }}-auto.min.js",
+{% endif %}
+	"exports": {
+		".": {
+{% if use_typescript %}
+			"types": "./dist/index.d.ts",
+{% endif %}
+			"import": "./dist/{{ package_name.split('/')[-1] }}.mjs",
+			"require": "./dist/{{ package_name.split('/')[-1] }}.cjs"
+		}{% if include_auto_entrypoint %},{% endif %}
+{% if include_auto_entrypoint %}
+		"./auto": {
+{% if use_typescript %}
+			"types": "./dist/auto.d.ts",
+{% endif %}
+			"import": "./dist/{{ package_name.split('/')[-1] }}-auto.mjs",
+			"require": "./dist/{{ package_name.split('/')[-1] }}-auto.cjs"
+		}
+{% endif %}
+	},
+	"files": ["dist"],
+	"homepage": "{{ site_url }}",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/{{ github_owner }}/{{ package_name.split('/')[-1] }}.git"
+	},
+	"bugs": {
+		"url": "https://github.com/{{ github_owner }}/{{ package_name.split('/')[-1] }}/issues"
+	},
+	"keywords": [],
+	"author": { "name": "{{ author_name }}", "url": "{{ author_url }}" },
+	"license": "{{ license }}",
+	"publishConfig": { "registry": "https://registry.npmjs.org/" },
+{% if include_auto_entrypoint %}
+	"sideEffects": ["./dist/*-auto.*"],
+{% endif %}
+	"scripts": {
+		"build": "npm run lib:build && astro build",
+		"dev": "astro dev",
+		"format": "prettier --write .",
+		"format:check": "prettier --check .",
+		"lib:build": "node bin/build-js.mjs{% if use_typescript %} && tsc --emitDeclarationOnly{% endif %}",
+		"lint": "eslint --fix .",
+		"lint:check": "eslint .",
+		"precommit": "lint-staged",
+		"prepare": "husky",
+		"preview": "astro preview",
+		"release": "release-it",
+		"release:dry-run": "release-it --dry-run --verbose",
+		"start": "npm run dev",
+		"test": "tsx ./node_modules/jasmine/bin/jasmine.js",
+		"typecheck": "astro check{% if use_typescript %} && tsc --noEmit{% endif %}"
+	},
+	"lint-staged": {
+		"*.{js,mjs,cjs,ts,astro}": ["prettier --write", "eslint --fix"],
+		"*.{css,md,json,yml,yaml}": "prettier --write"
+	},
+	"devDependencies": {
+		"@astrojs/check": "^0.9.4",
+		"@eslint/js": "^10.0.1",
+		"astro": "^7.0.0",
+		"astro-eslint-parser": "^1.4.0",
+		"eslint": "^10.6.0",
+		"eslint-config-prettier": "^10.1.8",
+		"eslint-plugin-astro": "^1.7.0",
+		"globals": "^17.7.0",
+		"husky": "^9.1.7",
+		"jasmine": "^6.3.0",
+		"lint-staged": "^16.4.0",
+		"prettier": "^3.7.4",
+		"prettier-plugin-astro": "^0.14.1",
+		"release-it": "^20.2.1",
+		"tsx": "^4.22.4",
+		"typescript": "^5.9.3",
+		"typescript-eslint": "^8.62.0",
+		"vite": "^8.1.0"
+	}
+}

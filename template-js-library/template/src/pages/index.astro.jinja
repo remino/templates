@@ -1,0 +1,30 @@
+---
+import { greet } from '../lib/index.{{ 'ts' if use_typescript else 'js' }}'
+
+const packageName = '{{ package_name }}'
+const description = '{{ package_description }}'
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="description" content={description} />
+		<title>{packageName}</title>
+	</head>
+	<body>
+		<main>
+			<h1>{packageName}</h1>
+			<p>{description}</p>
+
+			<h2>Install</h2>
+			<pre><code>{`npm install ${packageName}`}</code></pre>
+
+			<h2>Use</h2>
+			<pre><code>{`import { greet } from '${packageName}'\n\n${greet('World')}`}</code></pre>
+
+			<p><a href="https://github.com/{{ github_owner }}/{{ package_name.split('/')[-1] }}">Source code</a></p>
+		</main>
+	</body>
+</html>

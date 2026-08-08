@@ -1,0 +1,10 @@
+import { defineConfig } from 'astro/config'
+
+export default defineConfig({
+	outDir: './deploy/public',
+	site: '{{ site_url }}',
+	trailingSlash: 'always',
+	build: {
+		assets: '{{ package_name.split('/')[-1] }}',
+	},
+})

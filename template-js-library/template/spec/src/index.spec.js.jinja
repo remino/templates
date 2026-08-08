@@ -1,0 +1,7 @@
+import { greet } from '../../src/lib/index.{{ 'ts' if use_typescript else 'js' }}'
+
+describe('greet', () => {
+	it('greets a name', () => {
+		expect(greet('World')).toBe('Hello, World!')
+	})
+})

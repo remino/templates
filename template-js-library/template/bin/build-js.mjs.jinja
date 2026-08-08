@@ -1,0 +1,58 @@
+import { readdir, readFile, rm, writeFile } from 'node:fs/promises'
+import { resolve } from 'node:path'
+import { build } from 'vite'
+
+const root = process.cwd()
+const pkg = JSON.parse(await readFile(resolve(root, 'package.json'), 'utf8'))
+const fileStem = pkg.name.split('/').at(-1)
+const banner = `/*! ${pkg.name} v${pkg.version} | ${pkg.license} License */`
+
+const buildLibrary = async ({ entry, fileName, formats, minify = false, name }) =>
+	build({
+		configFile: false,
+		publicDir: false,
+		build: {
+			emptyOutDir: false,
+			lib: { entry, fileName, formats, name },
+			minify,
+			outDir: resolve(root, 'dist'),
+			rollupOptions: { output: { banner } },
+		},
+	})
+
+await rm(resolve(root, 'dist'), { force: true, recursive: true })
+
+await buildLibrary({
+	entry: resolve(root, 'src/lib/index.{{ 'ts' if use_typescript else 'js' }}'),
+	fileName: format => `${fileStem}.${format === 'es' ? 'mjs' : 'cjs'}`,
+	formats: ['es', 'cjs'],
+	name: '{{ project_name }}',
+})
+
+{% if include_auto_entrypoint %}
+await buildLibrary({
+	entry: resolve(root, 'src/lib/auto.{{ 'ts' if use_typescript else 'js' }}'),
+	fileName: format => `${fileStem}-auto.${format === 'es' ? 'mjs' : 'cjs'}`,
+	formats: ['es', 'cjs'],
+	name: '{{ project_name }}',
+})
+
+await buildLibrary({
+	entry: resolve(root, 'src/lib/auto.{{ 'ts' if use_typescript else 'js' }}'),
+	fileName: () => `${fileStem}-auto.min.js`,
+	formats: ['umd'],
+	minify: true,
+	name: '{{ project_name }}',
+})
+{% endif %}
+
+const distFiles = await readdir(resolve(root, 'dist'))
+await Promise.all(
+	distFiles
+		.filter(fileName => /\.(?:cjs|mjs|js)$/.test(fileName))
+		.map(async fileName => {
+			const path = resolve(root, 'dist', fileName)
+			const contents = await readFile(path, 'utf8')
+			if (!contents.startsWith(banner)) await writeFile(path, `${banner}\n${contents}`)
+		}),
+)

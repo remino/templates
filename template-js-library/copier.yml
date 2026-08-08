@@ -1,0 +1,63 @@
+_min_copier_version: "9.0.0"
+_subdirectory: template
+_templates_suffix: .jinja
+_exclude:
+  - "**/.DS_Store"
+  - "node_modules"
+  - "dist"
+  - ".astro"
+
+project_name:
+  type: str
+  help: Human-readable name for the library.
+
+package_name:
+  type: str
+  help: npm package name (for example, my-library or @scope/my-library).
+  validator: >-
+    {% if not package_name %}Package name is required.{% endif %}
+
+package_description:
+  type: str
+  help: A short npm description.
+
+author_name:
+  type: str
+  default: Rémino Rem
+
+author_url:
+  type: str
+  default: https://remino.net/
+
+copyright_year:
+  type: str
+  default: "2026"
+
+github_owner:
+  type: str
+  default: remino
+  help: GitHub user or organization that will own the repository.
+
+site_url:
+  type: str
+  default: https://example.com/
+  help: Public URL for the Astro documentation site (must end with /).
+
+use_typescript:
+  type: bool
+  default: true
+  help: Write the library source in TypeScript and publish declarations.
+
+include_auto_entrypoint:
+  type: bool
+  default: true
+  help: Include a side-effectful ./auto package entrypoint.
+
+license:
+  type: str
+  choices:
+    ISC: ISC
+    MIT: MIT
+  default: ISC
+
+_answers_file: .copier-answers.yml
