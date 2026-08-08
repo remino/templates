@@ -43,6 +43,16 @@ site_url:
   default: https://example.com/
   help: Public URL for the Astro documentation site (must end with /).
 
+node_version:
+  type: str
+  default: "22.12.0"
+  help: Node.js version pinned in mise.toml.
+
+include_rsdeploy:
+  type: bool
+  default: true
+  help: Add rsdeploy scripts and its environment/configuration files for docs deployment.
+
 use_typescript:
   type: bool
   default: true

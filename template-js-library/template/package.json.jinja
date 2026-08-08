@@ -47,6 +47,11 @@
 	"scripts": {
 		"build": "npm run lib:build && astro build",
 		"dev": "astro dev",
+{% if include_rsdeploy %}
+		"deploy": "rsdeploy -w",
+		"deploy:dryrun": "rsdeploy",
+		"docs:publish": "npm run build && npm run deploy",
+{% endif %}
 		"format": "prettier --write .",
 		"format:check": "prettier --check .",
 		"lib:build": "node bin/build-js.mjs{% if use_typescript %} && tsc --emitDeclarationOnly{% endif %}",

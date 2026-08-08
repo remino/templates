@@ -1,0 +1,29 @@
+module.exports = {
+	git: {
+		commitMessage: 'Bump version to ${version}',
+		requireCleanWorkingDir: true,
+		requireUpstream: true,
+		tagAnnotation: 'Release ${version}',
+		tagName: 'v${version}',
+	},
+	github: {
+		assets: ['dist/*'],
+		autoGenerate: true,
+		release: true,
+		tokenRef: 'RELEASE_IT_GITHUB_TOKEN',
+	},
+	hooks: {
+		'before:init': [
+			'node -e "if (!process.env.RELEASE_IT_GITHUB_TOKEN) { console.error(\'RELEASE_IT_GITHUB_TOKEN is required for automated GitHub releases.\'); process.exit(1) }"',
+			'npm test',
+			'npm run typecheck',
+			'npm run format:check',
+			'npm run build',
+		],
+		'before:release': 'npm pack --dry-run',
+{% if include_rsdeploy %}
+		'after:github:release': 'npm run docs:publish',
+{% endif %}
+	},
+	npm: { publish: true, publishArgs: ['--access', 'public'] },
+}
