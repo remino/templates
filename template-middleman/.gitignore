@@ -1,0 +1,8 @@
+.build/
+.bundle
+.cache
+.DS_Store
+.env
+.sass-cache
+build/
+node_modules/
